@@ -11,6 +11,8 @@ window.fps_counter.visible=False
 application.assets_folder='assets/'
 multiplier=1
 ClickerDudeClicks=0
+ClickerDudeAutoClicks=0
+ClickerDudeAutoClicksCost=50
 ClickerDudeShovels=0
 ClickerDudeDonuts=0
 ClickerDudesSingle=0
@@ -22,9 +24,25 @@ def ClickerDudeUpdate():
     MainClickerDude.animate('scale_x', .15, duration=.1)
     MainClickerDude.animate('scale_y', .15, duration=.1)
 
+def ClickerDudeAutoCollectorBuy1Func():
+    global ClickerDudeClicks,ClickerDudeAutoClicks
+    if ClickerDudeClicks>=ClickerDudeAutoClicksCost:
+        if ClickerDudeAutoClicks==0:
+            ClickerDudeAutoCollectorBuy1GenerateFunc()
+        ClickerDudeClicks -= ClickerDudeAutoClicksCost
+        ClickerDudeAutoClicks+=1
+
+def ClickerDudeAutoCollectorBuy1GenerateFunc():
+    global ClickerDudeClicks
+    ClickerDudeClicks += 1 * ClickerDudeAutoClicks
+    s = Sequence(Wait(1),Func(ClickerDudeAutoCollectorBuy1GenerateFunc))
+    s.start()
 
 def ClickerDudeCookieShop():
     pass
+
+ClickerDudeAutoCollectorBuy1=Button(scale_x=.125,scale_y=.135,x=-.3,y=-.22,icon='click.png',color=color.clear,on_click = ClickerDudeAutoCollectorBuy1Func)
+ClickerDudeAutoCollectorBuy1Text=Text(text='Buy to earn 1 <gold>cookie \n<white>every second!',x=-.2,y=-.2)
 
 def ClickerDudeShovelShop():
     pass
@@ -38,10 +56,9 @@ def ClickerDudeSingleShop():
 MainClickerDude=Button(icon='cookie.png',scale=.15,y=.1,x=.1,on_click=ClickerDudeUpdate,color=color.clear)
 ClickerDudeText=Text("Cookies: 0",y=.4,x=.05)
 ClickerDudeShopMenuBar=Entity(model='quad',color=color.gray,scale_x=20,scale_y=4,y=-3.2)
-EditorCamera()
 def ClickerDudeUpdateLoop():
     ClickerDudeText.text=f"Cookies: {ClickerDudeClicks}"
-    ClickerDudeText.create_background()#
+    ClickerDudeText.create_background()
     if ClickerDudeClicks>=100000 and ClickerDudeShovels>=10000 and ClickerDudeDonuts>=1000 and ClickerDudesSingle>=100:
         Begin()
 ClikcerDudeUpdateUpdater=Entity(update=ClickerDudeUpdateLoop)
@@ -54,5 +71,6 @@ ClickerDudeAutoCollectorIconBarrier=Entity(model='quad',scale_y=5,scale_x=.5,y=-
 
 def Begin():
     pass
+
 
 app.run()
