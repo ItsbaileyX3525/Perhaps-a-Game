@@ -13,13 +13,15 @@ multiplier=1
 ClickerDudeClicks=0
 ClickerDudeAutoClicks=0
 ClickerDudeAutoClicksCost=50
+ClickerDudeClicksMultiplier=1
+ClickerDudeClicksMultiplierCost=25
 ClickerDudeShovels=0
 ClickerDudeDonuts=0
 ClickerDudesSingle=0
 
 def ClickerDudeUpdate():
     global ClickerDudeClicks
-    ClickerDudeClicks+=1*multiplier
+    ClickerDudeClicks+=1*ClickerDudeClicksMultiplier*multiplier
     MainClickerDude.scale = [e*1.25 for e in [.1,.1]]
     MainClickerDude.animate('scale_x', .15, duration=.1)
     MainClickerDude.animate('scale_y', .15, duration=.1)
@@ -39,13 +41,20 @@ def ClickerDudeAutoCollectorBuy1GenerateFunc():
     s = Sequence(Wait(1),Func(ClickerDudeAutoCollectorBuy1GenerateFunc))
     s.start()
 
+def ClickerDudeClicksMultiplierFunc():
+    global ClickerDudeClicksMultiplier, ClickerDudeClicksMultiplierCost,ClickerDudeClicks
+    if ClickerDudeClicks >= ClickerDudeClicksMultiplierCost:
+        ClickerDudeClicks -= ClickerDudeClicksMultiplierCost
+        ClickerDudeClicksMultiplierCost += 35
+        ClickerDudeClicksMultiplier += 1
+
 def ClickerDudeCookieShop():
     pass
 
 ClickerDudeAutoCollectorBuy1=Button(scale_x=.125,scale_y=.135,x=-.3,y=-.22,icon='click.png',color=color.clear,on_click = ClickerDudeAutoCollectorBuy1Func)
 ClickerDudeAutoCollectorBuy1Text=Text(text=f'Buy to earn 1 <gold>cookie \n<white>every second!\n\nCost: {ClickerDudeAutoClicksCost}',x=-.2,y=-.2)
-ClickerDudeUpgrade=Button(scale_x=.125,scale_y=.125,icon='CookieUpgrade.png',color=color.clear,x=.2,y=-.22)
-ClickerDudeUpgradeText=Text()
+ClickerDudeUpgrade=Button(scale_x=.125,scale_y=.125,icon='CookieUpgrade.png',color=color.clear,x=.2,y=-.22,on_click=ClickerDudeClicksMultiplierFunc)
+ClickerDudeUpgradeText=Text(text=f'Upgrade <purple>clicks!\n\n<white>Cost: {ClickerDudeClicksMultiplierCost}',x=.3,y=-.2)
 
 def ClickerDudeShovelShop():
     pass
@@ -62,6 +71,7 @@ ClickerDudeShopMenuBar=Entity(model='quad',color=color.gray,scale_x=20,scale_y=4
 def ClickerDudeUpdateLoop():
     ClickerDudeText.text=f"Cookies: {ClickerDudeClicks}"
     ClickerDudeAutoCollectorBuy1Text.text=f'Buy to earn 1 <gold>cookie \n<white>every second!\n\nCost: {ClickerDudeAutoClicksCost}'
+    ClickerDudeUpgradeText.text=f'Upgrade <purple>clicks!\n\n<white>Cost: {ClickerDudeClicksMultiplierCost}'
     ClickerDudeText.create_background()
     if ClickerDudeClicks>=100000 and ClickerDudeShovels>=10000 and ClickerDudeDonuts>=1000 and ClickerDudesSingle>=100:
         Begin()
