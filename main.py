@@ -18,6 +18,7 @@ ClickerDudeClicksMultiplierCost=25
 ClickerDudeShovels=0
 ClickerDudeDonuts=0
 ClickerDudesSingle=0
+CurrentPage=1
 
 def ClickerDudeUpdate():
     global ClickerDudeClicks
@@ -49,7 +50,15 @@ def ClickerDudeClicksMultiplierFunc():
         ClickerDudeClicksMultiplier += 1
 
 def ClickerDudeCookieShop():
-    pass
+    global CurrentPage
+    if CurrentPage==1:
+        pass
+    elif CurrentPage==2:
+        ClickerDudeAutoCollectorBuy1.enabled=True
+        ClickerDudeUpgrade.enabled=True
+        CurrentPage=1
+
+        
 
 ClickerDudeAutoCollectorBuy1=Button(scale_x=.125,scale_y=.135,x=-.3,y=-.22,icon='click.png',color=color.clear,on_click = ClickerDudeAutoCollectorBuy1Func)
 ClickerDudeAutoCollectorBuy1Text=Text(text=f'Buy to earn 1 <gold>cookie \n<white>every second!\n\nCost: {ClickerDudeAutoClicksCost}',x=-.2,y=-.2)
